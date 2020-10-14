@@ -161,6 +161,8 @@ include_directories(
 catkin_install_python(PROGRAMS
   scripts/sending.py
   scripts/receiving.py
+  scripts/master.py
+  scripts/vide_detection.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

@@ -60,3 +60,11 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/test" TYPE PROGRAM FILES "/home/jules/Documents/sujet_4__bob_le_nettoyage/app/ros_ws/build/test/catkin_generated/installspace/receiving.py")
 endif()
 
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/test" TYPE PROGRAM FILES "/home/jules/Documents/sujet_4__bob_le_nettoyage/app/ros_ws/build/test/catkin_generated/installspace/master.py")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/test" TYPE PROGRAM FILES "/home/jules/Documents/sujet_4__bob_le_nettoyage/app/ros_ws/build/test/catkin_generated/installspace/vide_detection.py")
+endif()
+
