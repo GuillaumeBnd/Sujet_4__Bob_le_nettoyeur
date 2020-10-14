@@ -14,30 +14,37 @@ class VideDetection:
 
         self._publisher = rospy.Publisher('/vide_detection', Bool, queue_size = 10)
 
-        rate = rospy.Rate(self.frequence) # 10hz
-
         with Serial(port = "/dev/ttyUSB0", baudrate = 9600, timeout = 1, writeTimeout = 1) as port_serie:
             
             if port_serie.isOpen():
 
                 while not rospy.is_shutdown():
 
-                    self.listen_arduino_capteur(port_serie)
-                    rate.sleep()
+                    try:
+                        self.listen_arduino_capteur(port_serie)
+
+                    except rospy.ROSInterruptException:
+                        break
 
     def listen_arduino_capteur (self, port_serie):
 
-                ligne = port_serie.readline().decode('utf-8').replace('\r', '').replace('\n', '')
-                print(f'*{ligne}*')
-                    
-                if ligne == 'Table':
-                    self._publisher.publish(False)
+        try:
 
-                elif ligne == 'Vide':
-                    self._publisher.publish(True)
+            ligne = port_serie.readline().decode('utf-8').replace('\r', '').replace('\n', '')
+            print(f'*{ligne}*')
+                
+            if ligne == 'Table':
+                self._publisher.publish(False)
 
-                else:
-                    print('There is a problem.')
+            elif ligne == 'Vide':
+                self._publisher.publish(True)
+
+            else:
+                print('There is a problem.')
+
+        except UnicodeDecodeError as e:
+            print('UnicodeDecodeError')
+            pass
     
 if __name__ == '__main__':
 
