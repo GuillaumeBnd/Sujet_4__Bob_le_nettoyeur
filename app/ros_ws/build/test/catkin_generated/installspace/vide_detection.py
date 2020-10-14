@@ -12,41 +12,40 @@ class VideDetection:
         rospy.init_node('vide_detection', anonymous = True)
         rospy.loginfo('"vide_detection" node has been created')
 
-        # rospy.Subscriber('/vide_detection', String, self.callback)
-
         self._publisher = rospy.Publisher('/vide_detection', Bool, queue_size = 10)
-
-        rate = rospy.Rate(self.frequence) # 10hz
-
-        while not rospy.is_shutdown():
-
-            self.listen_arduino_capteur()
-            rate.sleep()
-
-    def callback(self, data):
-        rospy.loginfo(f"data received from the sender: {data}")
-
-    def listen_arduino_capteur (self):
 
         with Serial(port = "/dev/ttyUSB0", baudrate = 9600, timeout = 1, writeTimeout = 1) as port_serie:
             
             if port_serie.isOpen():
+
+                while not rospy.is_shutdown():
+
+                    try:
+                        self.listen_arduino_capteur(port_serie)
+
+                    except rospy.ROSInterruptException:
+                        break
+
+    def listen_arduino_capteur (self, port_serie):
+
+        try:
+
+            ligne = port_serie.readline().decode('utf-8').replace('\r', '').replace('\n', '')
+            print(f'*{ligne}*')
                 
-                while True:
+            if ligne == 'Table':
+                self._publisher.publish(False)
 
-                    ligne = str(port_serie.readline())
-                    print(ligne)
-                    
-                    if ligne == 'La table est détéctée.':
-                        self._publisher.publish(False)
+            elif ligne == 'Vide':
+                self._publisher.publish(True)
 
-                    elif ligne == 'Attention vide.':
-                        self._publisher.publish(True)
+            else:
+                print('There is a problem.')
 
-                    else:
-                        print('There is a problem.')
-
-                    port_serie.write(data.data.encode('utf-8'))
+        except UnicodeDecodeError as e:
+            
+            print('UnicodeDecodeError')
+            pass
     
 if __name__ == '__main__':
 

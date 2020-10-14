@@ -1,2 +1,2 @@
-test
+detection
 -DCATKIN_DEVEL_PREFIX=/home/jules/Documents/sujet_4__bob_le_nettoyage/app/ros_ws/devel -DCMAKE_INSTALL_PREFIX=/home/jules/Documents/sujet_4__bob_le_nettoyage/app/ros_ws/install -G Unix Makefiles
