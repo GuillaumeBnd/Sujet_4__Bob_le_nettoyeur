@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "browse": {
+                "databaseFilename": "",
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "includePath": [
+                "/fs03/share/users/antoine.passemard/home/servo_ws/devel/include/**",
+                "/opt/ros/melodic/include/**",
+                "/fs03/share/users/antoine.passemard/home/servo_ws/src/my_dynamixel_tutorial/include/**",
+                "/usr/include/**"
+            ],
+            "name": "ROS",
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c11",
+            "cppStandard": "c++14"
+        }
+    ],
+    "version": 4
+}

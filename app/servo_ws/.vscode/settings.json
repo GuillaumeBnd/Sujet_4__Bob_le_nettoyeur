@@ -1,0 +1,8 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/fs03/share/users/antoine.passemard/home/servo_ws/devel/lib/python2.7/dist-packages",
+        "/opt/ros/melodic/lib/python2.7/dist-packages",
+        "/fs03/share/users/antoine.passemard/home/qibullet",
+        "/softwares/INFO/Pepper/pynaoqi-python2.7-2.5.5.5-linux64/lib/python2.7/site-packages"
+    ]
+}
