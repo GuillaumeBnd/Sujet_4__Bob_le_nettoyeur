@@ -1,4 +1,4 @@
-prefix=/fs03/share/users/antoine.passemard/home/servo_ws/devel
+prefix=/fs03/share/users/antoine.passemard/home/sujet_4__bob_le_nettoyage/app/servo_ws/devel
 
 Name: dynamixel_driver
 Description: Description of dynamixel_driver
