@@ -7,9 +7,9 @@
 # new environment variables
 
 # modified environment variables
-export CMAKE_PREFIX_PATH="/fs03/share/users/antoine.passemard/home/servo_ws/devel:$CMAKE_PREFIX_PATH"
-export LD_LIBRARY_PATH="/fs03/share/users/antoine.passemard/home/servo_ws/devel/lib:$LD_LIBRARY_PATH"
-export PWD='/fs03/share/users/antoine.passemard/home/servo_ws/build'
-export PYTHONPATH="/fs03/share/users/antoine.passemard/home/servo_ws/devel/lib/python2.7/dist-packages:$PYTHONPATH"
-export ROSLISP_PACKAGE_DIRECTORIES="/fs03/share/users/antoine.passemard/home/servo_ws/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
-export ROS_PACKAGE_PATH="/fs03/share/users/antoine.passemard/home/servo_ws/src:$ROS_PACKAGE_PATH"
+export CMAKE_PREFIX_PATH="/fs03/share/users/antoine.passemard/home/sujet_4__bob_le_nettoyage/app/servo_ws/devel:$CMAKE_PREFIX_PATH"
+export LD_LIBRARY_PATH="/fs03/share/users/antoine.passemard/home/sujet_4__bob_le_nettoyage/app/servo_ws/devel/lib:$LD_LIBRARY_PATH"
+export PWD='/fs03/share/users/antoine.passemard/home/sujet_4__bob_le_nettoyage/app/servo_ws/build'
+export PYTHONPATH='/fs03/share/users/antoine.passemard/home/sujet_4__bob_le_nettoyage/app/servo_ws/devel/lib/python2.7/dist-packages:/opt/ros/melodic/lib/python2.7/dist-packages:/fs03/share/users/antoine.passemard/home/qibullet:/softwares/INFO/Pepper/pynaoqi-python2.7-2.5.5.5-linux64/lib/python2.7/site-packages'
+export ROSLISP_PACKAGE_DIRECTORIES='/fs03/share/users/antoine.passemard/home/sujet_4__bob_le_nettoyage/app/servo_ws/devel/share/common-lisp'
+export ROS_PACKAGE_PATH="/fs03/share/users/antoine.passemard/home/sujet_4__bob_le_nettoyage/app/servo_ws/src:$ROS_PACKAGE_PATH"

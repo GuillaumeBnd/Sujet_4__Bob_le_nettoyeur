@@ -3,7 +3,7 @@
 
 # since this file is sourced either use the provided _CATKIN_SETUP_DIR
 # or fall back to the destination set at configure time
-: ${_CATKIN_SETUP_DIR:=/fs03/share/users/antoine.passemard/home/servo_ws/devel}
+: ${_CATKIN_SETUP_DIR:=/fs03/share/users/antoine.passemard/home/sujet_4__bob_le_nettoyage/app/servo_ws/devel}
 CATKIN_SETUP_UTIL_ARGS="--extend --local"
 . "$_CATKIN_SETUP_DIR/setup.sh"
 unset CATKIN_SETUP_UTIL_ARGS
