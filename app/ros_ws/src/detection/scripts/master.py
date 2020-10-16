@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 #####################################################################################################################################################
 
 # @project        https://gitlab.com/5eti_proto_2021/sujet_4__bob_le_nettoyage.git
@@ -49,19 +51,19 @@ class Master:
     def _vide_detection_callback (self, data):
 
         self.vide_detected = bool(data.detected)
-        rospy.loginfo(f"Vide Detection = {self.vide_detected}")
+        rospy.loginfo("Vide Detection =" + str(self.vide_detected))
 
         # Generer un recul de plusieurs ticks
 
     def _command_mode_callback (self, data):
 
         self.mode = data.data
-        rospy.loginfo(f"Mode sent via BLE = {self.mode}")
+        rospy.loginfo("Mode sent via BLE = " + str(self.mode))
 
     def _command_roues_callback (self, data):
 
         self.roues_action = data.data
-        rospy.loginfo(f"Command roues sent via BLE = {self.roues_action}")
+        rospy.loginfo("Command roues sent via BLE = " + str(self.roues_action))
 
         if self.mode == 'control' and not self.vide_detected:
 
@@ -97,7 +99,7 @@ class Master:
 
         self.spray_triggered = bool(data.data)
 
-        rospy.loginfo(f"Command spray sent via BLE = {spray_triggered}")
+        rospy.loginfo("Command spray sent via BLE =" + str(spray_triggered))
 
         if self.mode == 'control' and not self.vide_detected:
 
@@ -112,7 +114,7 @@ class Master:
         assert self.low_spong != bool(data.data)
 
         self.low_spong = bool(data.data)
-        rospy.loginfo(f"Command eponge low sent via BLE = {self.low_spong}")
+        rospy.loginfo("Command eponge low sent via BLE =" + str(self.low_spong))
 
         if self.mode == 'control' and not self.vide_detected:
 

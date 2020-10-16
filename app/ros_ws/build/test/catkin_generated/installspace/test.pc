@@ -1,8 +1,0 @@
-prefix=/home/jules/Documents/sujet_4__bob_le_nettoyage/app/ros_ws/install
-
-Name: test
-Description: Description of test
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

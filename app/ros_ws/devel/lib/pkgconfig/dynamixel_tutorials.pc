@@ -1,0 +1,8 @@
+prefix=/fs03/share/users/antoine.passemard/home/sujet_4__bob_le_nettoyage/app/ros_ws/devel
+
+Name: dynamixel_tutorials
+Description: Description of dynamixel_tutorials
+Version: 0.4.1
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: dynamixel_controllers

@@ -23,6 +23,9 @@ class Master:
 
         self.tick_rotation = 0.1
         self.mode = 'control'
+        self.low_spong = False
+        self.vide_detected = False
+        self.spray_triggered = Fa
 
         rospy.Subscriber('/vide_detection', Vide, self._vide_detection_callback)
         rospy.Subscriber('/command_mode', String, self._command_mode_callback)
@@ -48,9 +51,11 @@ class Master:
         self.vide_detected = bool(data.detected)
         rospy.loginfo(f"Vide Detection = {self.vide_detected}")
 
+        # Generer un recul de plusieurs ticks
+
     def _command_mode_callback (self, data):
 
-        self.mode = bool(data.data)
+        self.mode = data.data
         rospy.loginfo(f"Mode sent via BLE = {self.mode}")
 
     def _command_roues_callback (self, data):
@@ -58,7 +63,7 @@ class Master:
         self.roues_action = data.data
         rospy.loginfo(f"Command roues sent via BLE = {self.roues_action}")
 
-        if self.mode == 'control':
+        if self.mode == 'control' and not self.vide_detected:
 
             if self.roues_action == 'avant':
 
@@ -94,7 +99,7 @@ class Master:
 
         rospy.loginfo(f"Command spray sent via BLE = {spray_triggered}")
 
-        if self.mode == 'control':
+        if self.mode == 'control' and not self.vide_detected:
 
             if self.spray_triggered:
 
@@ -109,7 +114,7 @@ class Master:
         self.low_spong = bool(data.data)
         rospy.loginfo(f"Command eponge low sent via BLE = {self.low_spong}")
 
-        if self.mode == 'control':
+        if self.mode == 'control' and not self.vide_detected:
 
             if self.low_spong:
 

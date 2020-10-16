@@ -1,8 +1,8 @@
-prefix=/home/jules/Documents/sujet_4__bob_le_nettoyage/app/ros_ws/devel
+prefix=/fs03/share/users/antoine.passemard/home/sujet_4__bob_le_nettoyage/app/ros_ws/devel
 
 Name: detection
 Description: Description of detection
 Version: 0.0.0
-Cflags: -I/home/jules/Documents/sujet_4__bob_le_nettoyage/app/ros_ws/devel/include
+Cflags: -I/fs03/share/users/antoine.passemard/home/sujet_4__bob_le_nettoyage/app/ros_ws/devel/include
 Libs: -L${prefix}/lib 
 Requires: message_runtime

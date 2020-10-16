@@ -44,7 +44,9 @@ class GetMessageEsp32:
 
         try:
 
-            stringReceived = port_serie.readline().decode('utf-8').replace('\r', '').replace('\n', '')
+            receiv = port_serie.readline()
+            # print(receiv)
+            stringReceived = receiv.decode('utf-8').replace('\r', '').replace('\n', '')
                 
             # CAPTEUR
             if stringReceived == 'CAPTEUR/table':
@@ -85,11 +87,18 @@ class GetMessageEsp32:
                 self._publisherEponge.publish(False)
 
             else:
-                rospy.logwarn('There is a problem.')
+
+                if len(stringReceived) != 0:
+                    rospy.logwarn(f'There is a problem. Data (type {type(stringReceived)}) = <{stringReceived}>')
+                    rospy.logwarn(stringReceived == 'BLE/control')
 
         except UnicodeDecodeError as e:
             
             rospy.logwarn('UnicodeDecodeError')
+            pass
+
+        except Exception as e:
+            rospy.logwarn(str(e))
             pass
 
 
