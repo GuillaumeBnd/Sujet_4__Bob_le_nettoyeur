@@ -9,7 +9,7 @@
 
 from serial import *
 import rospy
-from std_msgs.msg import String, Float64
+from std_msgs.msg import String, Float64, Bool
 from detection.msg import Vide
 
 ######################################################################################################################################################
@@ -21,67 +21,110 @@ class Master:
         rospy.init_node('master', anonymous = True)
         rospy.loginfo('"master" node has been created')
 
+        self.tick_rotation = 0.1
+        self.mode = 'control'
+
         rospy.Subscriber('/vide_detection', Vide, self._vide_detection_callback)
         rospy.Subscriber('/command_mode', String, self._command_mode_callback)
         rospy.Subscriber('/command_roues', String, self._command_roues_callback)
-        rospy.Subscriber('/command_spray', Bool, self._command_command_spray_callback)
-        rospy.Subscriber('/command_eponge', Bool, self._command_command_eponge_callback)
-
-        if self._mode == 'auto':
-            pass
-
-        elif self._mode == 'control':
-            pass
-
-        else:
-            raise Exception('Issue with the mode value.')
+        rospy.Subscriber('/command_spray', Bool, self._command_spray_callback)
+        rospy.Subscriber('/command_eponge', Bool, self._command_eponge_callback)
 
         self._pub_servo_bob_move = rospy.Publisher('/servo_bob_move', Vide, queue_size = 10)
-        self._pub_sevo_bob_eponge = rospy.Publisher('/sevo_bob_eponge', Vide, queue_size = 10)
+        self._pub_sevo_bob_eponge = rospy.Publisher('/servo_bob_eponge', Vide, queue_size = 10)
 
-        self.mode = 'Manual'
+        if self.mode == 'auto':
+            rospy.loginfo('Bob is working in "auto" mode')
 
-        self.tick_rotation = 0.1
+        elif self.mode == 'control':
+            rospy.loginfo('Bob is working in "control" mode')
 
-        while True:
-
-            if not self._vide_detected:
-
-                if mode == 'Manual':
-
-                    action = read_bluetooth()
-
-                    if action == 'Avant':
-
-                        # Publish on servo to drive front
-
-                    elif action == 'Arriere':
-
-                        # Publish on servo to drive back
-
-                    elif action == 'Turn_Left':
-
-                        # Publish on servo to turn left of one tick
-
-                    elif action == 'Turn_Right':
-
-                        # Publish on servo to turn left of one tick
-
-            else:
-
-                # Stop + security actions
+        else:
+            raise ValueError('Issue with the mode value.')
 
 
     def _vide_detection_callback (self, data):
 
-        self._vide_detected = bool(data.detected)
+        self.vide_detected = bool(data.detected)
+        rospy.loginfo(f"Vide Detection = {self.vide_detected}")
 
-        rospy.loginfo(f"Vide Detection = {self._vide_detected}")
+        # Generer un recul de plusieurs ticks
 
     def _command_mode_callback (self, data):
 
-        self._mode = data.data
-        rospy.loginfo(f"Command sent via BLE = {bool(data.data)}")
+        self.mode = data.data
+        rospy.loginfo(f"Mode sent via BLE = {self.mode}")
+
+    def _command_roues_callback (self, data):
+
+        self.roues_action = data.data
+        rospy.loginfo(f"Command roues sent via BLE = {self.roues_action}")
+
+        if self.mode == 'control' and not self.vide_detected:
+
+            if self.roues_action == 'avant':
+
+                # Publish on servo to drive front
+                rospy.loginfo('avant')
+
+
+            elif self.roues_action == 'arriere':
+
+                # Publish on servo to drive back
+                rospy.loginfo('arriere')
+
+
+            elif self.roues_action == 'gauche':
+
+                # Publish on servo to turn left of one tick
+                rospy.loginfo('gauche')
+
+
+            elif self.roues_action == 'droite':
+
+                # Publish on servo to turn left of one tick
+                rospy.loginfo('droite')
+
+
+            else:
+                raise ValueError('Issue with the roues action value.')
+
+
+    def _command_spray_callback (self, data):
+
+        self.spray_triggered = bool(data.data)
+
+        rospy.loginfo(f"Command spray sent via BLE = {spray_triggered}")
+
+        if self.mode == 'control' and not self.vide_detected:
+
+            if self.spray_triggered:
+
+                rospy.loginfo('spray_triggered')
+
+                # TBD
+
+    def _command_eponge_callback (self, data):
+
+        assert self.low_spong != bool(data.data)
+
+        self.low_spong = bool(data.data)
+        rospy.loginfo(f"Command eponge low sent via BLE = {self.low_spong}")
+
+        if self.mode == 'control' and not self.vide_detected:
+
+            if self.low_spong:
+
+                rospy.loginfo('low_spong')
+
+                # Move low epong
+
+            else:
+
+                rospy.loginfo('high_spong')
+
+                # Move high spong
+
 
 ######################################################################################################################################################
 

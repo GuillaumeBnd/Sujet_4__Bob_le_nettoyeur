@@ -96,3 +96,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/detection" TYPE PROGRAM FILES "/home/jules/Documents/sujet_4__bob_le_nettoyage/app/ros_ws/build/detection/catkin_generated/installspace/vide_detection.py")
 endif()
 
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/detection" TYPE PROGRAM FILES "/home/jules/Documents/sujet_4__bob_le_nettoyage/app/ros_ws/build/detection/catkin_generated/installspace/get_message_from_esp32.py")
+endif()
+

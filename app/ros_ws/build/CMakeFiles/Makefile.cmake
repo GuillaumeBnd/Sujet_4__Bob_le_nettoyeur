@@ -22,6 +22,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/home/jules/Documents/sujet_4__bob_le_nettoyage/app/ros_ws/src/CMakeLists.txt"
   "/home/jules/Documents/sujet_4__bob_le_nettoyage/app/ros_ws/src/detection/CMakeLists.txt"
   "/home/jules/Documents/sujet_4__bob_le_nettoyage/app/ros_ws/src/detection/package.xml"
+  "/home/jules/Documents/sujet_4__bob_le_nettoyage/app/ros_ws/src/detection/scripts/get_message_from_esp32.py"
   "/home/jules/Documents/sujet_4__bob_le_nettoyage/app/ros_ws/src/detection/scripts/master.py"
   "/home/jules/Documents/sujet_4__bob_le_nettoyage/app/ros_ws/src/detection/scripts/vide_detection.py"
   "/opt/ros/noetic/share/catkin/cmake/all.cmake"

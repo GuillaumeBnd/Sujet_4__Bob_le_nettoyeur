@@ -162,6 +162,7 @@ include_directories(
 catkin_install_python(PROGRAMS
   scripts/master.py
   scripts/vide_detection.py
+  scripts/get_message_from_esp32.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

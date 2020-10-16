@@ -2,4 +2,4 @@
 source_root_dir = '/home/jules/Documents/sujet_4__bob_le_nettoyage/app/ros_ws/src'
 whitelisted_packages = ''.split(';') if '' != '' else []
 blacklisted_packages = ''.split(';') if '' != '' else []
-underlay_workspaces = '/home/jules/Documents/sujet_4__bob_le_nettoyage/app/ros_ws/devel;/opt/ros/noetic'.split(';') if '/home/jules/Documents/sujet_4__bob_le_nettoyage/app/ros_ws/devel;/opt/ros/noetic' != '' else []
+underlay_workspaces = '/opt/ros/noetic'.split(';') if '/opt/ros/noetic' != '' else []

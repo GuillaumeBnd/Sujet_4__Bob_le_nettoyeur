@@ -31,15 +31,14 @@ class ReceiveBLECallback: public BLECharacteristicCallbacks {
         valor = "";
         for (int i = 0; i < value.length(); i++){
           // Serial.print(value[i]); // Presenta value.
-          valor = valor + value[i];
+          if (value[i] != 0)
+          {
+            valor = valor + value[i];
+          }
         }
 
-        //Serial.println("*********");
-        Serial.print("BLE : valeur reçue = ");
-        Serial.println(valor); // Presenta valor.
-
         //SEND VALEUR TO RASPBERRY
-        Serial.write(valor);
+        Serial.println(valor);
       }    
       
  
@@ -90,10 +89,6 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-   delay(1000);
-   //Serial.println("valeur dans la loop = ");
-   //Serial.println(valor); // Presenta valor.
 
    //CAPTEUR
    capteur_state = digitalRead(CapteurPin);//lecture du capteur
@@ -102,24 +97,24 @@ void loop() {
     
     if (capteur_state == LOW) //si quelquechose est detecte
     {
-       Serial.println("CAPTEUR : Table");
-       //tft.setTextColor(TFT_GREEN, TFT_BLACK);
-       //tft.drawString("Table", 0, 0, 2);
+       tft.setTextColor(TFT_GREEN, TFT_BLACK);
+       tft.drawString("Table", 0, 0, 2);
 
-       //Ne pas envoyer à raspi sauf si flag = 1. Si flag = 1, on envoie table a raspi et on remet flag à 0
+       // Ne pas envoyer à raspi sauf si flag = 1. Si flag = 1, on envoie table a raspi et on remet flag à 0
        if(depassementFlag == true){
-        Serial.write("CAPTEUR/table");
+        
+        Serial.println("CAPTEUR/table");
         depassementFlag = false;
+        
        }
     }
     else //rien n'est detecté dans les 5 cm
     {
-      Serial.println("CAPTEUR : Vide");
-      //tft.setTextColor(TFT_RED, TFT_BLACK);
-      //tft.drawString("VIDE !", 0, 0, 2);
+      tft.setTextColor(TFT_RED, TFT_BLACK);
+      tft.drawString("VIDE !", 0, 0, 2);
       
       //SEND TO RASPY WHILE "vide". Mettre un flag à true.
-      Serial.write("CAPTEUR/vide");
+      Serial.println("CAPTEUR/vide");
       depassementFlag = true;
       
     }
