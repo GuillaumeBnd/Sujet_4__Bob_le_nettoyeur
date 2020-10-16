@@ -1,5 +1,3 @@
-
-
 #include <BLEDevice.h>
 #include <BLEUtils.h>
 #include <BLEServer.h>
@@ -101,12 +99,12 @@ void loop() {
        tft.drawString("Table", 0, 0, 2);
 
        // Ne pas envoyer à raspi sauf si flag = 1. Si flag = 1, on envoie table a raspi et on remet flag à 0
-       if(depassementFlag == true){
+       //if(depassementFlag == true){
         
         Serial.println("CAPTEUR/table");
-        depassementFlag = false;
+        //depassementFlag = false;
         
-       }
+       //}
     }
     else //rien n'est detecté dans les 5 cm
     {
