@@ -1,0 +1,8 @@
+prefix=/fs03/share/users/antoine.passemard/home/servo_ws/devel
+
+Name: my_dynamixel_tutorial
+Description: Description of my_dynamixel_tutorial
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
