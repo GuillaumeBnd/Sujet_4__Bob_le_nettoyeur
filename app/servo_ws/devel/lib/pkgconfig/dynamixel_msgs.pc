@@ -1,8 +1,0 @@
-prefix=/fs03/share/users/antoine.passemard/home/sujet_4__bob_le_nettoyage/app/servo_ws/devel
-
-Name: dynamixel_msgs
-Description: Description of dynamixel_msgs
-Version: 0.4.1
-Cflags: -I/fs03/share/users/antoine.passemard/home/sujet_4__bob_le_nettoyage/app/servo_ws/devel/include
-Libs: -L${prefix}/lib 
-Requires: message_runtime std_msgs
