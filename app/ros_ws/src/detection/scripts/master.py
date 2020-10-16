@@ -23,6 +23,9 @@ class Master:
 
         self.tick_rotation = 0.1
         self.mode = 'control'
+        self.low_spong = False
+        self.vide_detected = False
+        self.spray_triggered = Fa
 
         rospy.Subscriber('/vide_detection', Vide, self._vide_detection_callback)
         rospy.Subscriber('/command_mode', String, self._command_mode_callback)
