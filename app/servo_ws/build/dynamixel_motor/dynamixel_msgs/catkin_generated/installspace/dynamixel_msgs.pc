@@ -1,4 +1,4 @@
-prefix=/fs03/share/users/antoine.passemard/home/servo_ws/install
+prefix=/fs03/share/users/antoine.passemard/home/sujet_4__bob_le_nettoyage/app/servo_ws/install
 
 Name: dynamixel_msgs
 Description: Description of dynamixel_msgs
