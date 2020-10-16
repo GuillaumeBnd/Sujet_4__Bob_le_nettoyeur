@@ -1,0 +1,2 @@
+dynamixel_motor/dynamixel_controllers:dynamixel_motor/dynamixel_driver:dynamixel_motor/dynamixel_motor:dynamixel_motor/dynamixel_msgs:dynamixel_motor/dynamixel_tutorials:my_dynamixel_tutorial
+-DCATKIN_DEVEL_PREFIX=/fs03/share/users/antoine.passemard/home/servo_ws/devel -DCMAKE_INSTALL_PREFIX=/fs03/share/users/antoine.passemard/home/servo_ws/install -G Unix Makefiles
