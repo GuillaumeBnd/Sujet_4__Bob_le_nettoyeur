@@ -22,6 +22,19 @@ class Master:
         rospy.loginfo('"master" node has been created')
 
         rospy.Subscriber('/vide_detection', Vide, self._vide_detection_callback)
+        rospy.Subscriber('/command_mode', String, self._command_mode_callback)
+        rospy.Subscriber('/command_roues', String, self._command_roues_callback)
+        rospy.Subscriber('/command_spray', Bool, self._command_command_spray_callback)
+        rospy.Subscriber('/command_eponge', Bool, self._command_command_eponge_callback)
+
+        if self._mode == 'auto':
+            pass
+
+        elif self._mode == 'control':
+            pass
+
+        else:
+            raise Exception('Issue with the mode value.')
 
         self._pub_servo_bob_move = rospy.Publisher('/servo_bob_move', Vide, queue_size = 10)
         self._pub_sevo_bob_eponge = rospy.Publisher('/sevo_bob_eponge', Vide, queue_size = 10)
@@ -64,6 +77,11 @@ class Master:
         self._vide_detected = bool(data.detected)
 
         rospy.loginfo(f"Vide Detection = {self._vide_detected}")
+
+    def _command_mode_callback (self, data):
+
+        self._mode = data.data
+        rospy.loginfo(f"Command sent via BLE = {bool(data.data)}")
 
 ######################################################################################################################################################
 
