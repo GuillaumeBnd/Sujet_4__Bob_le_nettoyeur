@@ -32,6 +32,8 @@ class Master:
         self.vide_detected = False
         self.spray_triggered = False
 
+        self.sens_normal = True
+
         rospy.Subscriber('/vide_detection', Vide, self._vide_detection_callback)
         rospy.Subscriber('/command_mode', String, self._command_mode_callback)
         rospy.Subscriber('/command_roues', String, self._command_roues_callback)
@@ -58,7 +60,7 @@ class Master:
 
         while not rospy.is_shutdown():
 
-            if self.mode == 'auto':
+            while self.mode == 'auto':
 
                 self.low_spong = True
                 self.command_eponge()
@@ -68,10 +70,13 @@ class Master:
                 while not self.vide_detected:
 
                     self.roues_stop()
+
+                    self.spray_triggered = True
                     self.command_spray()
                     self.roues_avant()
 
                     for i in range (0, 10):
+
                         rospy.sleep(0.1)
 
                         if self.vide_detected:
@@ -87,19 +92,26 @@ class Master:
                 self.roues_stop()
 
                 # Demi tour
-                self.roues_gauche()
-                self.roues_gauche()
+                if self.sens_normal:
 
+                    self.roues_gauche()
+                    self.roues_gauche()
+
+                if not self.sens_normal:
+
+                    self.roues_droite()
+                    self.roues_droite()
+                
+                self.sens_normal = not self.sens_normal
 
             rate.sleep()
-
 
     def _vide_detection_callback (self, data):
 
         self.vide_detected = bool(data.detected)
         rospy.loginfo("Vide Detection = " + str(self.vide_detected))
 
-        self._speed_deux_roues.publish(0)
+        self.roues_stop()
 
     def _command_mode_callback (self, data):
 
@@ -115,38 +127,19 @@ class Master:
 
             if self.roues_action == 'avant':
 
-                rospy.loginfo('avant')
-                self._speed_deux_roues.publish(self.speed_translation)
+                self.roues_avant()
 
             elif self.roues_action == 'arriere':
 
-                rospy.loginfo('arriere')
-                self._speed_deux_roues.publish( - self.speed_translation)
-
+                self.roues_arriere()
 
             elif self.roues_action == 'gauche':
 
-                rospy.loginfo('gauche')
-
-                self._speed_roue_gauche.publish(-self.speed_rotation)
-                self._speed_roue_droite.publish(-self.speed_rotation)
-
-                rospy.sleep(2)
-
-                self._speed_deux_roues.publish(0)
+                self.roues_gauche()
 
             elif self.roues_action == 'droite':
 
-                rospy.loginfo('droite')
-
-                self._speed_roue_gauche.publish(self.speed_rotation)
-                self._srospy.sleep(2)
-
-                self._speed_deux_roues.publish(0)peed_roue_droite.publish(self.speed_rotation)
-
-                rospy.sleep(2)
-
-                self._speed_deux_roues.publish(0)
+                self.roues_droite()
 
             else:
                 raise ValueError('Issue with the roues action value.')
@@ -157,13 +150,9 @@ class Master:
 
         rospy.loginfo("Command spray sent via BLE =" + str(spray_triggered))
 
-        if self.mode == 'control' and not self.vide_detected:
+        if self.mode == 'control':
 
-            if self.spray_triggered:
-
-                rospy.loginfo('spray_triggered')
-
-                # TBD
+            self.command_spray()
 
     def _command_eponge_callback (self, data):
 
@@ -174,22 +163,14 @@ class Master:
 
         if self.mode == 'control':
 
-            if self.low_spong:
+            self.command_eponge()
 
-                rospy.loginfo('low_spong')
-		        self._position_eponge.publish(-1)
-
-            else:
-
-                rospy.loginfo('high_spong')
-		        self._position_eponge.publish(0)
-
-    def roues_avant(self):
+    def roues_avant (self):
 
         rospy.loginfo('avant')
         self._speed_deux_roues.publish(self.speed_translation)
 
-    def roues_arriere(self):
+    def roues_arriere (self):
 
         rospy.loginfo('avant')
         self._speed_deux_roues.publish(-self.speed_translation)
@@ -221,7 +202,7 @@ class Master:
         rospy.loginfo('stop')
         self._speed_deux_roues.publish(0)
 
-    def command_eponge(self):
+    def command_eponge (self):
 
         if self.low_spong:
 
@@ -232,6 +213,12 @@ class Master:
 
             rospy.loginfo('high_spong')
             self._position_eponge.publish(0)
+
+    def command_spray (self):
+
+        if self.spray_triggered:
+
+            rospy.loginfo('spray_triggered')
 
 
 ######################################################################################################################################################
