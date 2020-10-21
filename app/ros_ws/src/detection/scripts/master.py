@@ -54,11 +54,50 @@ class Master:
         else:
             raise ValueError('Issue with the mode value.')
 
+        rate = rospy.Rate(10) # 10hz
+
+        while not rospy.is_shutdown():
+
+            if self.mode == 'auto':
+
+                self.low_spong = True
+                self.command_eponge()
+
+                # Cycle de nettoyage en ligne droite avant d'atteindre le bord de la table
+
+                while not self.vide_detected:
+
+                    self.roues_stop()
+                    self.command_spray()
+                    self.roues_avant()
+
+                    for i in range (0, 10):
+                        rospy.sleep(0.1)
+
+                        if self.vide_detected:
+                            self.roues_stop()
+                            break
+
+                    pass
+
+                self.roues_arriere()
+
+                rospy.sleep(2)
+
+                self.roues_stop()
+
+                # Demi tour
+                self.roues_gauche()
+                self.roues_gauche()
+
+
+            rate.sleep()
+
 
     def _vide_detection_callback (self, data):
 
         self.vide_detected = bool(data.detected)
-        rospy.loginfo("Vide Detection =" + str(self.vide_detected))
+        rospy.loginfo("Vide Detection = " + str(self.vide_detected))
 
         self._speed_deux_roues.publish(0)
 
@@ -101,7 +140,9 @@ class Master:
                 rospy.loginfo('droite')
 
                 self._speed_roue_gauche.publish(self.speed_rotation)
-                self._speed_roue_droite.publish(self.speed_rotation)
+                self._srospy.sleep(2)
+
+                self._speed_deux_roues.publish(0)peed_roue_droite.publish(self.speed_rotation)
 
                 rospy.sleep(2)
 
@@ -131,19 +172,66 @@ class Master:
         self.low_spong = bool(data.data)
         rospy.loginfo("Command eponge low sent via BLE =" + str(self.low_spong))
 
-        if self.mode == 'control' and not self.vide_detected:
+        if self.mode == 'control':
 
             if self.low_spong:
 
                 rospy.loginfo('low_spong')
 		        self._position_eponge.publish(-1)
-                # Move low epong
 
             else:
 
                 rospy.loginfo('high_spong')
 		        self._position_eponge.publish(0)
-                # Move high spong
+
+    def roues_avant(self):
+
+        rospy.loginfo('avant')
+        self._speed_deux_roues.publish(self.speed_translation)
+
+    def roues_arriere(self):
+
+        rospy.loginfo('avant')
+        self._speed_deux_roues.publish(-self.speed_translation)
+
+    def roues_gauche (self):
+
+        rospy.loginfo('gauche')
+
+        self._speed_roue_gauche.publish(-self.speed_rotation)
+        self._speed_roue_droite.publish(-self.speed_rotation)
+
+        rospy.sleep(2)
+
+        self.roues_stop()
+
+    def roues_droite (self):
+
+        rospy.loginfo('droite')
+
+        self._speed_roue_gauche.publish(self.speed_rotation)
+        self._speed_roue_droite.publish(self.speed_rotation)
+
+        rospy.sleep(2)
+
+        self.roues_stop()
+
+    def roues_stop (self):
+
+        rospy.loginfo('stop')
+        self._speed_deux_roues.publish(0)
+
+    def command_eponge(self):
+
+        if self.low_spong:
+
+            rospy.loginfo('low_spong')
+            self._position_eponge.publish(-1)
+
+        else:
+
+            rospy.loginfo('high_spong')
+            self._position_eponge.publish(0)
 
 
 ######################################################################################################################################################
