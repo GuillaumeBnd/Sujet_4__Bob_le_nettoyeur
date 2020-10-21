@@ -13,6 +13,7 @@ TFT_eSPI tft = TFT_eSPI();  // Invoke library, pins defined in User_Setup.h
 
 // Global variables
 const int CapteurPin = 2; // broche du capteur infrarouge
+const int RELAY_PIN = 27; //broche pour le signal allant sur le relay de la pompe
 int capteur_state; // etat de la sortie du capteur
 
 String valor;
@@ -36,6 +37,14 @@ class ReceiveBLECallback: public BLECharacteristicCallbacks {
         }
 
         //SEND VALEUR TO RASPBERRY
+
+        if(valor == "BLE/spray"){
+          digitalWrite(RELAY_PIN, HIGH); // turn on pump 5 seconds
+          delay(2000);
+          digitalWrite(RELAY_PIN, LOW);
+          delay(2000);
+        }
+        
         Serial.println(valor);
       }    
       
@@ -72,6 +81,9 @@ void setup() {
 
   Serial.begin(115200);
   Serial.println("CAPTEUR : INITIALISATION ...");
+
+  // initialize digital pin 27 as an output.
+  pinMode(RELAY_PIN, OUTPUT);
   
   tft.init();
   tft.setRotation(1);
