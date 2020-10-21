@@ -89,8 +89,8 @@ class Master:
 
                 rospy.loginfo('gauche')
 
-                self._speed_roue_gauche.publish(self.speed_rotation)
-                self._speed_roue_droite.publish(self.speed_rotation)
+                self._speed_roue_gauche.publish(-self.speed_rotation)
+                self._speed_roue_droite.publish(-self.speed_rotation)
 
                 rospy.sleep(2)
 
@@ -100,8 +100,8 @@ class Master:
 
                 rospy.loginfo('droite')
 
-                self._speed_roue_gauche.publish(-self.speed_rotation)
-                self._speed_roue_droite.publish(-self.speed_rotation)
+                self._speed_roue_gauche.publish(self.speed_rotation)
+                self._speed_roue_droite.publish(self.speed_rotation)
 
                 rospy.sleep(2)
 
@@ -109,7 +109,6 @@ class Master:
 
             else:
                 raise ValueError('Issue with the roues action value.')
-
 
     def _command_spray_callback (self, data):
 
@@ -127,7 +126,7 @@ class Master:
 
     def _command_eponge_callback (self, data):
 
-        assert self.low_spong != bool(data.data)
+       # assert self.low_spong != bool(data.data)
 
         self.low_spong = bool(data.data)
         rospy.loginfo("Command eponge low sent via BLE =" + str(self.low_spong))
@@ -137,13 +136,13 @@ class Master:
             if self.low_spong:
 
                 rospy.loginfo('low_spong')
-
+		        self._position_eponge.publish(-1)
                 # Move low epong
 
             else:
 
                 rospy.loginfo('high_spong')
-
+		        self._position_eponge.publish(0)
                 # Move high spong
 
 
