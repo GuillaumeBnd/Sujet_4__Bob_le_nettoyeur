@@ -1,8 +1,6 @@
-#!/usr/bin/env python
-
 #####################################################################################################################################################
 
-# @project        https:# gitlab.com/5eti_proto_2021/sujet_4__bob_le_nettoyage.git
+# @project        https://gitlab.com/5eti_proto_2021/sujet_4__bob_le_nettoyage.git
 # @file           app/ros_ws/src/detection/scripts/vide_detection.py
 # @author         Pauline Odet && Antoine Passemard && Jules Graeff && Guillaume Bernard
 # @license        ???
@@ -22,7 +20,7 @@ class GetMessageEsp32:
     def __init__ (self):
 
         rospy.init_node('get_message_from_esp32', anonymous = True)
-        rospy.loginfo('"get_message_from_esp32" node has been created')
+        //rospy.loginfo('"vide_detection" node has been created')
 
         self._publisherVide = rospy.Publisher('/vide_detection', Vide, queue_size = 10)
         self._publisherMode = rospy.Publisher('/command_mode', String, queue_size = 10)
@@ -46,69 +44,66 @@ class GetMessageEsp32:
 
         try:
 
-            receiv = port_serie.readline()
-            # print(receiv)
-            stringReceived = receiv.decode('utf-8').replace('\r', '').replace('\n', '')
+            stringReceived = port_serie.readline().decode('utf-8').replace('\r', '').replace('\n', '')
                 
-            # CAPTEUR
+            //CAPTEUR
             if stringReceived == 'CAPTEUR/table':
                 self._publisherVide.publish(False)
 
             elif stringReceived == 'CAPTEUR/vide':
                 self._publisherVide.publish(True)
 
-            # MODE
+
+            //MODE
             elif stringReceived == 'BLE/auto':
             	self._publisherMode.publish("auto")
 
             elif stringReceived == 'BLE/control':
             	self._publisherMode.publish("control")
 
-            # ROUES
+            //ROUES
             elif stringReceived == 'BLE/avant':
-                self._publisherRoues.publish("avant")
+            	self._publisherRoues.publish("avant")
 
-            elif stringReceived == 'BLE/arriere':
-                self._publisherRoues.publish("arriere")
-            
-            elif stringReceived == 'BLE/gauche':
-                self._publisherRoues.publish("gauche")
+			elif stringReceived == 'BLE/arriere':
+				self._publisherRoues.publish("arriere")
+
+			elif stringReceived == 'BLE/gauche':
+				self._publisherRoues.publish("gauche")
 			
-            elif stringReceived == 'BLE/droite':
-                self._publisherRoues.publish("droite")
+			elif stringReceived == 'BLE/droite':
+				self._publisherRoues.publish("droite")
 
-            # SPRAY
-            elif stringReceived == 'BLE/spray':
-                self._publisherSpray.publish(True)
+			//SPRAY : juste a titre informatif, car c'est l'esp32 qui gère la pompe
+		    elif stringReceived == 'BLE/spray':
+		    	self._publisherSpray.publish(True) 
 
-		   	# EPONGE
-            elif stringReceived == 'BLE/epongebas':
-                self._publisherEponge.publish(True)
 
-            elif stringReceived == 'BLE/epongehaut':
-                self._publisherEponge.publish(False)
+		   	//EPONGE ! En mode auto, l'eponge dois descendre automatiquement après 2/3 secondes de spray
+		    elif stringReceived == 'BLE/epongebas':
+		    	self._publisherEponge.publish(True)
+
+		    elif stringReceived == 'BLE/epongehaut':
+		    	self._publisherEponge.publish(False)
+
 
             else:
-
-                if len(stringReceived) != 0:
-                    rospy.logwarn('There is a problem. Data (type ' + str(type(stringReceived)) + ') <' + str(stringReceived) + '>')
-                    rospy.logwarn(stringReceived == 'BLE/control')
+                rospy.logwarn('string venant de BLE non recevable')
 
         except UnicodeDecodeError as e:
             
             rospy.logwarn('UnicodeDecodeError')
             pass
 
-        except Exception as e:
-            rospy.logwarn(str(e))
-            pass
+
+
 
 
 ######################################################################################################################################################
     
 if __name__ == '__main__':
 
-    get_message_from_esp32 = GetMessageEsp32()
+    vide_detection = VideDetection()
     rospy.spin()
 
 ######################################################################################################################################################
