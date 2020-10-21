@@ -73,13 +73,17 @@ class Master:
 
                     self.spray_triggered = True
                     self.command_spray()
+                    self.spray_triggered = False
+
                     self.roues_avant()
 
+                    # j'avance durant une seconde
                     for i in range (0, 10):
 
                         rospy.sleep(0.1)
 
                         if self.vide_detected:
+
                             self.roues_stop()
                             break
 
@@ -91,10 +95,13 @@ class Master:
 
                 self.roues_stop()
 
-                # Demi tour
+                # Demi tour (surement lever l'eponge)
                 if self.sens_normal:
 
                     self.roues_gauche()
+                    self.roues_avant()
+                    rospy.sleep(0.5)
+                    self.roues_stop()
                     self.roues_gauche()
 
                 if not self.sens_normal:
@@ -126,19 +133,15 @@ class Master:
         if self.mode == 'control' and not self.vide_detected:
 
             if self.roues_action == 'avant':
-
                 self.roues_avant()
 
             elif self.roues_action == 'arriere':
-
                 self.roues_arriere()
 
             elif self.roues_action == 'gauche':
-
                 self.roues_gauche()
 
             elif self.roues_action == 'droite':
-
                 self.roues_droite()
 
             else:
@@ -219,7 +222,6 @@ class Master:
         if self.spray_triggered:
 
             rospy.loginfo('spray_triggered')
-
 
 ######################################################################################################################################################
 
