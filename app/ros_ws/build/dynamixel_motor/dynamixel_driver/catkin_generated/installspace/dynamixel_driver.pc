@@ -1,8 +1,0 @@
-prefix=/fs03/share/users/antoine.passemard/home/sujet_4__bob_le_nettoyage/app/ros_ws/install
-
-Name: dynamixel_driver
-Description: Description of dynamixel_driver
-Version: 0.4.1
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: rospy diagnostic_msgs
