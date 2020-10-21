@@ -110,7 +110,6 @@ class Master:
             else:
                 raise ValueError('Issue with the roues action value.')
 
-
     def _command_spray_callback (self, data):
 
         self.spray_triggered = bool(data.data)
@@ -137,13 +136,13 @@ class Master:
             if self.low_spong:
 
                 rospy.loginfo('low_spong')
-		self._position_eponge.publish(-1)
+		        self._position_eponge.publish(-1)
                 # Move low epong
 
             else:
 
                 rospy.loginfo('high_spong')
-		self._position_eponge.publish(0)
+		        self._position_eponge.publish(0)
                 # Move high spong
 
 
