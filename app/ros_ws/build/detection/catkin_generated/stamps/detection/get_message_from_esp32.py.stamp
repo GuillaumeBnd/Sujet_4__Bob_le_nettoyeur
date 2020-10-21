@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 #####################################################################################################################################################
 
 # @project        https:# gitlab.com/5eti_proto_2021/sujet_4__bob_le_nettoyage.git
@@ -89,7 +91,7 @@ class GetMessageEsp32:
             else:
 
                 if len(stringReceived) != 0:
-                    rospy.logwarn(f'There is a problem. Data (type {type(stringReceived)}) = <{stringReceived}>')
+                    rospy.logwarn('There is a problem. Data (type ' + str(type(stringReceived)) + ') <' + str(stringReceived) + '>')
                     rospy.logwarn(stringReceived == 'BLE/control')
 
         except UnicodeDecodeError as e:

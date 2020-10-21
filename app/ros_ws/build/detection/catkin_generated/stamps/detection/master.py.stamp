@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 #####################################################################################################################################################
 
 # @project        https://gitlab.com/5eti_proto_2021/sujet_4__bob_le_nettoyage.git
@@ -7,10 +9,11 @@
 
 ######################################################################################################################################################
 
-from serial import *
 import rospy
 from std_msgs.msg import String, Float64, Bool
 from detection.msg import Vide
+
+from dynamixel_msgs.msg import MotorStateList
 
 ######################################################################################################################################################
 
@@ -22,10 +25,12 @@ class Master:
         rospy.loginfo('"master" node has been created')
 
         self.tick_rotation = 0.1
+        self.speed = 7
+
         self.mode = 'control'
         self.low_spong = False
         self.vide_detected = False
-        self.spray_triggered = Fa
+        self.spray_triggered = False
 
         rospy.Subscriber('/vide_detection', Vide, self._vide_detection_callback)
         rospy.Subscriber('/command_mode', String, self._command_mode_callback)
@@ -33,8 +38,13 @@ class Master:
         rospy.Subscriber('/command_spray', Bool, self._command_spray_callback)
         rospy.Subscriber('/command_eponge', Bool, self._command_eponge_callback)
 
-        self._pub_servo_bob_move = rospy.Publisher('/servo_bob_move', Vide, queue_size = 10)
-        self._pub_sevo_bob_eponge = rospy.Publisher('/servo_bob_eponge', Vide, queue_size = 10)
+        # Commands servomoteur
+
+        self._speed_roue_gauche = rospy.Publisher('/joint1_controller/command', Float64, queue_size = 10)
+        self._speed_roue_droite = rospy.Publisher('/joint2_controller/command', Float64, queue_size = 10)
+        self._speed_deux_roues = rospy.Publisher('/dual_motor_controller/command', Float64, queue_size = 10)
+        self._position_eponge = rospy.Publisher('/joint3_controller/command', Float64, queue_size = 10)
+        #self.speed_motor = rospy.Publisher('/motor_states/pan_tilt_port', MotorStateList, queue_size = 10)
 
         if self.mode == 'auto':
             rospy.loginfo('Bob is working in "auto" mode')
@@ -49,32 +59,31 @@ class Master:
     def _vide_detection_callback (self, data):
 
         self.vide_detected = bool(data.detected)
-        rospy.loginfo(f"Vide Detection = {self.vide_detected}")
+        rospy.loginfo("Vide Detection =" + str(self.vide_detected))
 
         # Generer un recul de plusieurs ticks
 
     def _command_mode_callback (self, data):
 
         self.mode = data.data
-        rospy.loginfo(f"Mode sent via BLE = {self.mode}")
+        rospy.loginfo("Mode sent via BLE = " + str(self.mode))
 
     def _command_roues_callback (self, data):
 
         self.roues_action = data.data
-        rospy.loginfo(f"Command roues sent via BLE = {self.roues_action}")
+        rospy.loginfo("Command roues sent via BLE = " + str(self.roues_action))
 
         if self.mode == 'control' and not self.vide_detected:
 
             if self.roues_action == 'avant':
 
-                # Publish on servo to drive front
                 rospy.loginfo('avant')
-
+                self._speed_deux_roues.publish(self.speed)
 
             elif self.roues_action == 'arriere':
 
-                # Publish on servo to drive back
                 rospy.loginfo('arriere')
+                self._speed_deux_roues.publish( - self.speed)
 
 
             elif self.roues_action == 'gauche':
@@ -97,7 +106,7 @@ class Master:
 
         self.spray_triggered = bool(data.data)
 
-        rospy.loginfo(f"Command spray sent via BLE = {spray_triggered}")
+        rospy.loginfo("Command spray sent via BLE =" + str(spray_triggered))
 
         if self.mode == 'control' and not self.vide_detected:
 
@@ -112,7 +121,7 @@ class Master:
         assert self.low_spong != bool(data.data)
 
         self.low_spong = bool(data.data)
-        rospy.loginfo(f"Command eponge low sent via BLE = {self.low_spong}")
+        rospy.loginfo("Command eponge low sent via BLE =" + str(self.low_spong))
 
         if self.mode == 'control' and not self.vide_detected:
 

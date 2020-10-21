@@ -9,10 +9,11 @@
 
 ######################################################################################################################################################
 
-from serial import *
 import rospy
 from std_msgs.msg import String, Float64, Bool
 from detection.msg import Vide
+
+from dynamixel_msgs.msg import MotorStateList
 
 ######################################################################################################################################################
 
@@ -23,11 +24,13 @@ class Master:
         rospy.init_node('master', anonymous = True)
         rospy.loginfo('"master" node has been created')
 
-        self.tick_rotation = 0.1
+        self.speed_translation = 7
+        self.speed_rotation = 4
+
         self.mode = 'control'
         self.low_spong = False
         self.vide_detected = False
-        self.spray_triggered = Fa
+        self.spray_triggered = False
 
         rospy.Subscriber('/vide_detection', Vide, self._vide_detection_callback)
         rospy.Subscriber('/command_mode', String, self._command_mode_callback)
@@ -35,8 +38,12 @@ class Master:
         rospy.Subscriber('/command_spray', Bool, self._command_spray_callback)
         rospy.Subscriber('/command_eponge', Bool, self._command_eponge_callback)
 
-        self._pub_servo_bob_move = rospy.Publisher('/servo_bob_move', Vide, queue_size = 10)
-        self._pub_sevo_bob_eponge = rospy.Publisher('/servo_bob_eponge', Vide, queue_size = 10)
+        # Commands servomoteur
+
+        self._speed_roue_gauche = rospy.Publisher('/joint1_controller/command', Float64, queue_size = 10)
+        self._speed_roue_droite = rospy.Publisher('/joint2_controller/command', Float64, queue_size = 10)
+        self._speed_deux_roues = rospy.Publisher('/dual_motor_controller/command', Float64, queue_size = 10)
+        self._position_eponge = rospy.Publisher('/joint3_controller/command', Float64, queue_size = 10)
 
         if self.mode == 'auto':
             rospy.loginfo('Bob is working in "auto" mode')
@@ -53,7 +60,7 @@ class Master:
         self.vide_detected = bool(data.detected)
         rospy.loginfo("Vide Detection =" + str(self.vide_detected))
 
-        # Generer un recul de plusieurs ticks
+        self._speed_deux_roues.publish(0)
 
     def _command_mode_callback (self, data):
 
@@ -69,27 +76,36 @@ class Master:
 
             if self.roues_action == 'avant':
 
-                # Publish on servo to drive front
                 rospy.loginfo('avant')
-
+                self._speed_deux_roues.publish(self.speed_translation)
 
             elif self.roues_action == 'arriere':
 
-                # Publish on servo to drive back
                 rospy.loginfo('arriere')
+                self._speed_deux_roues.publish( - self.speed_translation)
 
 
             elif self.roues_action == 'gauche':
 
-                # Publish on servo to turn left of one tick
                 rospy.loginfo('gauche')
 
+                self._speed_roue_gauche.publish(self.speed_rotation)
+                self._speed_roue_droite.publish(self.speed_rotation)
+
+                rospy.sleep(2)
+
+                self._speed_deux_roues.publish(0)
 
             elif self.roues_action == 'droite':
 
-                # Publish on servo to turn left of one tick
                 rospy.loginfo('droite')
 
+                self._speed_roue_gauche.publish(-self.speed_rotation)
+                self._speed_roue_droite.publish(-self.speed_rotation)
+
+                rospy.sleep(2)
+
+                self._speed_deux_roues.publish(0)
 
             else:
                 raise ValueError('Issue with the roues action value.')

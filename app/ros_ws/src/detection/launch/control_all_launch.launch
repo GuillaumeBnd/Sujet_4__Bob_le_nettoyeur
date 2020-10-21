@@ -13,7 +13,7 @@
         </rosparam>
     </node> 
 
-    <rosparam file="$(find my_dynamixel_tutorial)/dual_motor.yaml" command="load"/>
+    <rosparam file="$(find detection)/dual_motor.yaml" command="load"/>
 
     <node name="dual_motor_controller_spawner" pkg="dynamixel_controllers" type="controller_spawner.py"
           args="--manager=dxl_manager
@@ -21,7 +21,7 @@
                 dual_motor_controller"
           output="screen"/>
 
-    <rosparam file="$(find my_dynamixel_tutorial)/tilt.yaml" command="load"/>
+    <rosparam file="$(find detection)/tilt.yaml" command="load"/>
     <node name="controller_spawner" pkg="dynamixel_controllers" type="controller_spawner.py"
           args="--manager=dxl_manager
                 --port pan_tilt_port
@@ -32,7 +32,7 @@
           output="screen"/>
           
   <!-- Start joints trajectory controller controller -->
-    <rosparam file="$(find my_dynamixel_tutorial)/joints_trajectory_controller.yaml" command="load"/>
+    <rosparam file="$(find detection)/joints_trajectory_controller.yaml" command="load"/>
     <node name="controller_spawner_meta" pkg="dynamixel_controllers" type="controller_spawner.py"
           args="--manager=dxl_manager
                 --type=meta
@@ -43,7 +43,7 @@
                "
           output="screen"/>
 
-    <node name="gestion_speed" pkg="my_dynamixel_tutorial" type="gestion_speed_roues.py" output="screen"/>
-
+    <node name="master" pkg="detection" type="master.py" output="screen"/>
+    <node name="get_message_from_esp32" pkg="detection" type="get_message_from_esp32.py" output="screen"/>
 
 </launch>
