@@ -103,7 +103,7 @@ class GetMessageEsp32:
     
 if __name__ == '__main__':
 
-    vide_detection = VideDetection()
+    getMessageEsp32 = GetMessageEsp32()
     rospy.spin()
 
 ######################################################################################################################################################
