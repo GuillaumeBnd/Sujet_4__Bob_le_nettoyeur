@@ -15,11 +15,11 @@ from detection.msg import Vide
 
 ######################################################################################################################################################
 
-class GetMessageEsp32:
+class GetSendMessageEsp32:
 
     def __init__ (self):
 
-        rospy.init_node('get_message_from_esp32', anonymous = True)
+        rospy.init_node('get_send_message_from_esp32', anonymous = True)
         
 
         self._publisherVide = rospy.Publisher('/vide_detection', Vide, queue_size = 10)
@@ -113,7 +113,7 @@ class GetMessageEsp32:
     
 if __name__ == '__main__':
 
-    getMessageEsp32 = GetMessageEsp32()
+    getSendMessageEsp32 = GetSendMessageEsp32()
     rospy.spin()
 
 ######################################################################################################################################################
