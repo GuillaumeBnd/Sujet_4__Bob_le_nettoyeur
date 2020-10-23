@@ -25,7 +25,7 @@ class Master:
         rospy.loginfo('"master" node has been created')
 
         self.speed_translation = 7
-        self.speed_rotation = 4
+        self.speed_rotation = 5.5
 
         self.mode = 'control'
         self.low_spong = False
@@ -39,9 +39,6 @@ class Master:
         rospy.Subscriber('/command_roues', String, self._command_roues_callback)
         rospy.Subscriber('/command_spray', Bool, self._command_spray_callback)
         rospy.Subscriber('/command_eponge', Bool, self._command_eponge_callback)
-
- 
-
 
         self._speed_roue_gauche = rospy.Publisher('/joint1_controller/command', Float64, queue_size = 10)
         self._speed_roue_droite = rospy.Publisher('/joint2_controller/command', Float64, queue_size = 10)
@@ -123,7 +120,8 @@ class Master:
         self.vide_detected = bool(data.detected)
         rospy.loginfo("Vide Detection = " + str(self.vide_detected))
 
-        self.roues_stop()
+        if self.vide_detected:
+            self.roues_stop()
 
     def _command_mode_callback (self, data):
 
@@ -149,6 +147,9 @@ class Master:
             elif self.roues_action == 'droite':
                 self.roues_droite()
 
+            elif self.roues_action == 'stop':
+                self.roues_stop()
+
             else:
                 raise ValueError('Issue with the roues action value.')
 
@@ -156,7 +157,7 @@ class Master:
 
         self.spray_triggered = bool(data.data)
 
-        rospy.loginfo("Command spray sent via BLE =" + str(spray_triggered))
+        rospy.loginfo("Command spray sent via BLE =" + str(self.spray_triggered))
 
     def _command_eponge_callback (self, data):
 
@@ -172,12 +173,12 @@ class Master:
     def roues_avant (self):
 
         rospy.loginfo('avant')
-        self._speed_deux_roues.publish(self.speed_translation)
+        self._speed_deux_roues.publish( - self.speed_translation)
 
     def roues_arriere (self):
 
         rospy.loginfo('avant')
-        self._speed_deux_roues.publish(-self.speed_translation)
+        self._speed_deux_roues.publish(self.speed_translation)
 
     def roues_gauche (self):
 
@@ -203,7 +204,6 @@ class Master:
 
     def roues_stop (self):
 
-        rospy.loginfo('stop')
         self._speed_deux_roues.publish(0)
 
     def command_eponge (self):
@@ -211,12 +211,12 @@ class Master:
         if self.low_spong:
 
             rospy.loginfo('low_spong')
-            self._position_eponge.publish(-1)
+            self._position_eponge.publish(0.3)
 
         else:
 
             rospy.loginfo('high_spong')
-            self._position_eponge.publish(0)
+            self._position_eponge.publish(0.8)
 
     # WARNING : we need to stop the robot when spray because no sensore info can be fetch.
 

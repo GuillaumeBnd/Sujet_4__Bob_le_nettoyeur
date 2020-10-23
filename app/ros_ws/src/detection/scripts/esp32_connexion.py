@@ -83,6 +83,9 @@ class Esp32Connexion:
             elif stringReceived == 'BLE/droite':
                 self._publisherRoues.publish("droite")
 
+            elif stringReceived == 'BLE/stop':
+                self._publisherRoues.publish("stop")
+
             # SPRAY
             elif stringReceived == 'BLE/spray':
                 self._publisherSpray.publish(True)
