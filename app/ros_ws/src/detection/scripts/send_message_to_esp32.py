@@ -20,7 +20,7 @@ class GetMessageEsp32:
     def __init__ (self):
 
         rospy.init_node('get_message_from_esp32', anonymous = True)
-        //rospy.loginfo('"vide_detection" node has been created')
+        
 
         self._publisherVide = rospy.Publisher('/vide_detection', Vide, queue_size = 10)
         self._publisherMode = rospy.Publisher('/command_mode', String, queue_size = 10)
@@ -66,7 +66,7 @@ class GetMessageEsp32:
 
             stringReceived = self.port_serie.readline().decode('utf-8').replace('\r', '').replace('\n', '')
                 
-            //CAPTEUR
+          
             if stringReceived == 'CAPTEUR/table':
                 self._publisherVide.publish(False)
 
@@ -74,36 +74,26 @@ class GetMessageEsp32:
                 self._publisherVide.publish(True)
 
 
-            //MODE
+ 
             elif stringReceived == 'BLE/auto':
             	self._publisherMode.publish("auto")
 
             elif stringReceived == 'BLE/control':
             	self._publisherMode.publish("control")
 
-            //ROUES
             elif stringReceived == 'BLE/avant':
             	self._publisherRoues.publish("avant")
-
-			elif stringReceived == 'BLE/arriere':
+            elif stringReceived == 'BLE/arriere':
 				self._publisherRoues.publish("arriere")
-
-			elif stringReceived == 'BLE/gauche':
+            elif stringReceived == 'BLE/gauche':
 				self._publisherRoues.publish("gauche")
-			
-			elif stringReceived == 'BLE/droite':
+            elif stringReceived == 'BLE/droite':
 				self._publisherRoues.publish("droite")
-
-			//SPRAY : juste a titre informatif, car c'est l'esp32 qui gère la pompe
-		    elif stringReceived == 'BLE/spray':
+            elif stringReceived == 'BLE/spray':
 		    	self._publisherSpray.publish(True) 
-
-
-		   	//EPONGE ! En mode auto, l'eponge dois descendre automatiquement après 2/3 secondes de spray
-		    elif stringReceived == 'BLE/epongebas':
+            elif stringReceived == 'BLE/epongebas':
 		    	self._publisherEponge.publish(True)
-
-		    elif stringReceived == 'BLE/epongehaut':
+            elif stringReceived == 'BLE/epongehaut':
 		    	self._publisherEponge.publish(False)
 
 
