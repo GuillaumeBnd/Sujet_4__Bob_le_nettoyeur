@@ -22,3 +22,12 @@ roscore
 ```bash
 roslaunch detection control_all_launch.launch
 ```
+
+The command used for debugging (reassigned the enslavement) the servo is : 
+
+```bash
+rosrun dynamixel_driver set_servo_config.py 3 --cw-angle-limit=0 --cw-angle-limit=0
+```
+
+
+
