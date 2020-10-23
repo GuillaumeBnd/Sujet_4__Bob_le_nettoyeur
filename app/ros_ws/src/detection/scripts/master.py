@@ -40,7 +40,9 @@ class Master:
         rospy.Subscriber('/command_spray', Bool, self._command_spray_callback)
         rospy.Subscriber('/command_eponge', Bool, self._command_eponge_callback)
 
-        # Commands servomoteur
+        # Commands servomoteurroslaunch detection control_all_launch.launch
+roslaunch detection control_all_launch.launch
+
 
         self._speed_roue_gauche = rospy.Publisher('/joint1_controller/command', Float64, queue_size = 10)
         self._speed_roue_droite = rospy.Publisher('/joint2_controller/command', Float64, queue_size = 10)

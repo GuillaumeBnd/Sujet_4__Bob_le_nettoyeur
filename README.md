@@ -22,3 +22,6 @@ roscore
 ```bash
 roslaunch detection control_all_launch.launch
 ```
+
+
+cd Documents/sujet__
