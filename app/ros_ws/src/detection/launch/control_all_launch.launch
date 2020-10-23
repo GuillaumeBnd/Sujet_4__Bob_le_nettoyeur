@@ -44,6 +44,6 @@
           output="screen"/>
 
     <node name="master" pkg="detection" type="master.py" output="screen"/>
-    <node name="get_message_from_esp32" pkg="detection" type="get_message_from_esp32.py" output="screen"/>
+    <node name="esp32_connexion" pkg="detection" type="esp32_connexion.py" output="screen"/>
 
 </launch>

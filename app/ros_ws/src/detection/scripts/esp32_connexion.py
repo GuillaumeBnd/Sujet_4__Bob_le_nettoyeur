@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 #####################################################################################################################################################
 
 # @project        https://gitlab.com/5eti_proto_2021/sujet_4__bob_le_nettoyage.git
@@ -29,8 +31,7 @@ class Esp32Connexion:
 
         rospy.Subscriber('/send_to_esp32', String, self._sendToEsp32)
 
-        self.port_serie = serial.Serial('/dev/ttyUSB0', 115200 , timeout=1, writeTimeout = 1)
-        self.port_serie.open()
+        self.port_serie = Serial('/dev/ttyUSB0', 115200 , timeout=1, writeTimeout = 1)
 
         if self.port_serie.isOpen():
 
@@ -44,9 +45,10 @@ class Esp32Connexion:
 
             self.port_serie.close()
 
-    def _sendToEsp32 (self,message):
+    def _sendToEsp32 (self, message):
 
-        self.port_serie.write(message)
+        self.port_serie.write(message.data)
+
 
     def _listen_esp32 (self, port_serie):
 

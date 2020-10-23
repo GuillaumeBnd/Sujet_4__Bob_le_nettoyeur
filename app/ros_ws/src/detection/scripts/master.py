@@ -40,14 +40,15 @@ class Master:
         rospy.Subscriber('/command_spray', Bool, self._command_spray_callback)
         rospy.Subscriber('/command_eponge', Bool, self._command_eponge_callback)
 
-        # Commands servomoteurroslaunch detection control_all_launch.launch
-roslaunch detection control_all_launch.launch
+ 
 
 
         self._speed_roue_gauche = rospy.Publisher('/joint1_controller/command', Float64, queue_size = 10)
         self._speed_roue_droite = rospy.Publisher('/joint2_controller/command', Float64, queue_size = 10)
         self._speed_deux_roues = rospy.Publisher('/dual_motor_controller/command', Float64, queue_size = 10)
         self._position_eponge = rospy.Publisher('/joint3_controller/command', Float64, queue_size = 10)
+
+        self._spray = rospy.Publisher('/send_to_esp32', String, queue_size = 10)
 
         if self.mode == 'auto':
             rospy.loginfo('Bob is working in "auto" mode')
@@ -64,6 +65,8 @@ roslaunch detection control_all_launch.launch
 
             while self.mode == 'auto':
 
+                rospy.loginfo('"Auto" mode')
+
                 self.low_spong = True
                 self.command_eponge()
 
@@ -75,6 +78,8 @@ roslaunch detection control_all_launch.launch
 
                     self.spray_triggered = True
                     self.command_spray()
+                    rospy.sleep(2)     # duration of the spray
+                    
                     self.spray_triggered = False
 
                     self.roues_avant()
@@ -88,8 +93,6 @@ roslaunch detection control_all_launch.launch
 
                             self.roues_stop()
                             break
-
-                    pass
 
                 self.roues_arriere()
 
@@ -155,10 +158,6 @@ roslaunch detection control_all_launch.launch
 
         rospy.loginfo("Command spray sent via BLE =" + str(spray_triggered))
 
-        if self.mode == 'control':
-
-            self.command_spray()
-
     def _command_eponge_callback (self, data):
 
        # assert self.low_spong != bool(data.data)
@@ -219,10 +218,13 @@ roslaunch detection control_all_launch.launch
             rospy.loginfo('high_spong')
             self._position_eponge.publish(0)
 
+    # WARNING : we need to stop the robot when spray because no sensore info can be fetch.
+
     def command_spray (self):
 
         if self.spray_triggered:
 
+            self._spray.publish("AUTO/spray")
             rospy.loginfo('spray_triggered')
 
 ######################################################################################################################################################
