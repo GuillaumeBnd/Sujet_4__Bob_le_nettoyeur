@@ -47,10 +47,7 @@ class ReceiveBLECallback: public BLECharacteristicCallbacks {
         
         Serial.println(valor);
       }    
-      
- 
-
-        
+   
     }
 };
 
@@ -94,14 +91,13 @@ void setup() {
   tft.drawString("Bonjour, je suis\r\nBob Le Nettoyeur !", 0, 0, 2);
 
   delay(3000);
-  tft.fillScreen(TFT_BLACK);
-  
+  tft.fillScreen(TFT_BLACK); 
 }
 
 void loop() {
 
    //CAPTEUR
-   capteur_state = digitalRead(CapteurPin);//lecture du capteur
+   capteur_state = digitalRead(CapteurPin); //lecture du capteur
 
     tft.fillScreen(TFT_BLACK);
     
@@ -109,14 +105,8 @@ void loop() {
     {
        tft.setTextColor(TFT_GREEN, TFT_BLACK);
        tft.drawString("Table", 0, 0, 2);
-
-       // Ne pas envoyer à raspi sauf si flag = 1. Si flag = 1, on envoie table a raspi et on remet flag à 0
-       //if(depassementFlag == true){
         
         Serial.println("CAPTEUR/table");
-        //depassementFlag = false;
-        
-       //}
     }
     else //rien n'est detecté dans les 5 cm
     {

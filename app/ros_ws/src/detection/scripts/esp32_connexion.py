@@ -15,12 +15,11 @@ from detection.msg import Vide
 
 ######################################################################################################################################################
 
-class GetSendMessageEsp32:
+class Esp32Connexion:
 
     def __init__ (self):
 
-        rospy.init_node('get_send_message_from_esp32', anonymous = True)
-        
+        rospy.init_node('esp32_connexion', anonymous = True)
 
         self._publisherVide = rospy.Publisher('/vide_detection', Vide, queue_size = 10)
         self._publisherMode = rospy.Publisher('/command_mode', String, queue_size = 10)
@@ -30,90 +29,85 @@ class GetSendMessageEsp32:
 
         rospy.Subscriber('/send_to_esp32', String, self._sendToEsp32)
 
-
         self.port_serie = serial.Serial('/dev/ttyUSB0', 115200 , timeout=1, writeTimeout = 1)
+        self.port_serie.open()
+
         if self.port_serie.isOpen():
 
-                while not rospy.is_shutdown():
+            while not rospy.is_shutdown():
 
-                    try:
-                        self._listen_esp32(self.port_serie)
+                try:
+                    self._listen_esp32(self.port_serie)
 
-                    except rospy.ROSInterruptException:
-                        break
+                except rospy.ROSInterruptException:
+                    break
 
-        """
-        with Serial(port = "/dev/ttyUSB0", baudrate = 115200, timeout = 1, writeTimeout = 1) as port_serie:
-            
-            if port_serie.isOpen():
+            self.port_serie.close()
 
-                while not rospy.is_shutdown():
+    def _sendToEsp32 (self,message):
 
-                    try:
-                        self._listen_esp32(port_serie)
-
-                    except rospy.ROSInterruptException:
-                        break
-        """
-
-    def _sendToEsp32(self,message):
         self.port_serie.write(message)
-
 
     def _listen_esp32 (self, port_serie):
 
         try:
 
             stringReceived = self.port_serie.readline().decode('utf-8').replace('\r', '').replace('\n', '')
-                
-          
+            
+            # CAPTEUR
             if stringReceived == 'CAPTEUR/table':
                 self._publisherVide.publish(False)
 
             elif stringReceived == 'CAPTEUR/vide':
                 self._publisherVide.publish(True)
-
-
  
+            # MODES DE FONCTIONNEMENT
             elif stringReceived == 'BLE/auto':
             	self._publisherMode.publish("auto")
 
             elif stringReceived == 'BLE/control':
             	self._publisherMode.publish("control")
 
+            # DEPLACEMENT ROUES
             elif stringReceived == 'BLE/avant':
             	self._publisherRoues.publish("avant")
-            elif stringReceived == 'BLE/arriere':
-				self._publisherRoues.publish("arriere")
-            elif stringReceived == 'BLE/gauche':
-				self._publisherRoues.publish("gauche")
-            elif stringReceived == 'BLE/droite':
-				self._publisherRoues.publish("droite")
-            elif stringReceived == 'BLE/spray':
-		    	self._publisherSpray.publish(True) 
-            elif stringReceived == 'BLE/epongebas':
-		    	self._publisherEponge.publish(True)
-            elif stringReceived == 'BLE/epongehaut':
-		    	self._publisherEponge.publish(False)
 
+            elif stringReceived == 'BLE/arriere':
+                self._publisherRoues.publish("arriere")
+
+            elif stringReceived == 'BLE/gauche':
+                self._publisherRoues.publish("gauche")
+
+            elif stringReceived == 'BLE/droite':
+                self._publisherRoues.publish("droite")
+
+            # SPRAY
+            elif stringReceived == 'BLE/spray':
+                self._publisherSpray.publish(True)
+ 
+            # EPONGE
+            elif stringReceived == 'BLE/epongebas':
+                self._publisherEponge.publish(True)
+
+            elif stringReceived == 'BLE/epongehaut':
+                self._publisherEponge.publish(False)
 
             else:
-                rospy.logwarn('string venant de BLE non recevable')
+
+                if len(stringReceived) != 0:
+                    rospy.logwarn('There is a problem. Data (type ' + str(type(stringReceived)) + ') <' + str(stringReceived) + '>')
+                    rospy.logwarn(stringReceived == 'BLE/control')
 
         except UnicodeDecodeError as e:
             
             rospy.logwarn('UnicodeDecodeError')
             pass
 
-
-
-
-
 ######################################################################################################################################################
     
 if __name__ == '__main__':
 
-    getSendMessageEsp32 = GetSendMessageEsp32()
+    get_send_message_esp32 = Esp32Connexion()
     rospy.spin()
 
 ######################################################################################################################################################

@@ -161,7 +161,7 @@ include_directories(
 ## in contrast to setup.py, you can choose the destination
 catkin_install_python(PROGRAMS
   scripts/master.py
-  scripts/get_message_from_esp32.py
+  scripts/esp32_connexion.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
