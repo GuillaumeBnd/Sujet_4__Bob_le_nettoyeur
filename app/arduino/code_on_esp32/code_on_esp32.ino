@@ -1,9 +1,19 @@
+/*
+*  app/arduino/code_on_esp32/code_on_esp32.ino.cpp
+*  SUJET 4 - BOBLE NETTOYEUR
+*
+*  Created by Jules Graeff, Pauline Odet, Antoine Passemard and Guillaume Bernard.
+*  Copyright 2020 CPE Lyon. All rights reserved.
+*/
+
+/* BLE libraries */
 #include <BLEDevice.h>
 #include <BLEUtils.h>
 #include <BLEServer.h>
-#include <TFT_eSPI.h> // Graphics and font library for ST7735 driver chip
-#include <SPI.h>
 
+/* Graphics and font library for ST7735 driver chip */
+#include <TFT_eSPI.h>
+#include <SPI.h>
 
 TFT_eSPI tft = TFT_eSPI();  // Invoke library, pins defined in User_Setup.h
 
@@ -11,49 +21,45 @@ TFT_eSPI tft = TFT_eSPI();  // Invoke library, pins defined in User_Setup.h
 #define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
 #define CHARACTERISTIC_UUIDreceive "beb5483e-36e1-4688-b7f5-ea07361b26a8"
 
-// Global variables
+/* Global variables */
 const int CapteurPin = 2; // broche du capteur infrarouge
-const int RELAY_PIN = 27; //broche pour le signal allant sur le relay de la pompe
+const int RELAY_PIN = 27; // broche pour le signal allant sur le relay de la pompe
 int capteur_state; // etat de la sortie du capteur
-
 String valor;
-//bool mode = true; //mode = true veut dire en mode AUTO, false = mode controle
-bool depassementFlag = false; //flag mis a true quand on a eu un dépassement dans le vide
+bool depassementFlag = false; // flag mis a true quand on a eu un dépassement dans le vide
 
-
-class ReceiveBLECallback: public BLECharacteristicCallbacks {
-    void onWrite(BLECharacteristic *pCharacteristic) {
-      //Serial.println("On write");
+class ReceiveBLECallback: public BLECharacteristicCallbacks
+{
+    void onWrite(BLECharacteristic *pCharacteristic)
+    {
       std::string value = pCharacteristic->getValue();
      
       if (value.length() > 0) {
+
         valor = "";
-        for (int i = 0; i < value.length(); i++){
-          // Serial.print(value[i]); // Presenta value.
-          if (value[i] != 0)
+        for (int i = 0; i < value.length(); i++)
+        {
+          if (value[i] != 0)  // Remove \x00 of the received BLE msg
           {
             valor = valor + value[i];
           }
         }
 
-        //SEND VALEUR TO RASPBERRY
-
-        if(valor == "BLE/spray"){
-          digitalWrite(RELAY_PIN, HIGH); // turn on pump 5 seconds
+        if(valor == "BLE/spray")
+        {
+          digitalWrite(RELAY_PIN, HIGH); // turn on pump
           delay(2000);
-          digitalWrite(RELAY_PIN, LOW);
+          digitalWrite(RELAY_PIN, LOW);  // turn off pump
           delay(2000);
         }
         
         Serial.println(valor);
       }    
-   
     }
 };
 
 void setup() {
 
-  //BLE
   Serial.begin(115200);
 
   BLEDevice::init("BOB_LE_NETTOYEUR");
@@ -73,13 +79,11 @@ void setup() {
   BLEAdvertising *pAdvertising = pServer->getAdvertising();
   pAdvertising->start();
 
-  //CAPTEUR
   pinMode(CapteurPin, INPUT); //la broche du capteur est mise en entree
 
   Serial.begin(115200);
-  Serial.println("CAPTEUR : INITIALISATION ...");
 
-  // initialize digital pin 27 as an output.
+  // Initialize digital pin 27 as an output.
   pinMode(RELAY_PIN, OUTPUT);
   
   tft.init();
@@ -88,34 +92,33 @@ void setup() {
   tft.fillScreen(TFT_BLACK);
   tft.setTextColor(TFT_BLUE, TFT_BLACK);
 
-  tft.drawString("Bonjour, je suis\r\nBob Le Nettoyeur !", 0, 0, 2);
+  tft.drawString("Bonjour, je suis Bob Le Nettoyeur !", 0, 0, 2);
 
   delay(3000);
   tft.fillScreen(TFT_BLACK); 
 }
 
-void loop() {
+void loop()
+{
+  capteur_state = digitalRead(CapteurPin); //lecture du capteur
 
-   //CAPTEUR
-   capteur_state = digitalRead(CapteurPin); //lecture du capteur
+  tft.fillScreen(TFT_BLACK);
+  
+  if (capteur_state == LOW) // si la table est detectee
+  {
+      tft.setTextColor(TFT_GREEN, TFT_BLACK);
+      tft.drawString("Table", 0, 0, 2);
+      
+      Serial.println("CAPTEUR/table");
+  }
 
-    tft.fillScreen(TFT_BLACK);
+  else // rien n'est detecté dans les 5 cm == VIDE
+  {
+    tft.setTextColor(TFT_RED, TFT_BLACK);
+    tft.drawString("VIDE !", 0, 0, 2);
     
-    if (capteur_state == LOW) //si quelquechose est detecte
-    {
-       tft.setTextColor(TFT_GREEN, TFT_BLACK);
-       tft.drawString("Table", 0, 0, 2);
-        
-        Serial.println("CAPTEUR/table");
-    }
-    else //rien n'est detecté dans les 5 cm
-    {
-      tft.setTextColor(TFT_RED, TFT_BLACK);
-      tft.drawString("VIDE !", 0, 0, 2);
-      
-      //SEND TO RASPY WHILE "vide". Mettre un flag à true.
-      Serial.println("CAPTEUR/vide");
-      depassementFlag = true;
-      
-    }
+    // Print on serial BUS "vide". Mettre un flag à true.
+    Serial.println("CAPTEUR/vide");
+    depassementFlag = true;
+  }
 }
