@@ -3,14 +3,14 @@
 #####################################################################################################################################################
 
 # @project        https://gitlab.com/5eti_proto_2021/sujet_4__bob_le_nettoyage.git
-# @file           app/ros_ws/src/detection/scripts/master.py
+# @file           app/ros_ws/src/bob_le_nettoyeur/scripts/master.py
 # @author         Jules Graeff && Guillaume Bernard && Antoine Passemard && Pauline Odet
 # @license        ???
 
 ######################################################################################################################################################
 
 import rospy
-from detection.msg import Vide
+from bob_le_nettoyeur.msg import Vide
 from std_msgs.msg import String, Float64, Bool
 from dynamixel_msgs.msg import MotorStateList
 
@@ -32,7 +32,7 @@ class Master:
         self.vide_detected = False
 
         # Subscribers definition
-        rospy.Subscriber('/vide_detection', Vide, self._vide_detection_callback)
+        rospy.Subscriber('/vide_bob_le_nettoyeur', Vide, self._vide_bob_le_nettoyeur_callback)
         rospy.Subscriber('/command_mode', String, self._command_mode_callback)
         rospy.Subscriber('/command_roues', String, self._command_roues_callback)
         rospy.Subscriber('/trigger_spray', Bool, self._trigger_spray_callback)
@@ -69,10 +69,10 @@ class Master:
 
     ## Callbacks of the subscriber
 
-    def _vide_detection_callback (self, data):
+    def _vide_bob_le_nettoyeur_callback (self, data):
 
         self.vide_detected = bool(data.detected)
-        rospy.loginfo("Vide Detection = " + str(self.vide_detected))
+        rospy.loginfo("Vide bob_le_nettoyeur = " + str(self.vide_detected))
 
         if self.vide_detected:
             self.roues_stop()

@@ -3,7 +3,7 @@
 #####################################################################################################################################################
 
 # @project        https://gitlab.com/5eti_proto_2021/sujet_4__bob_le_nettoyage.git
-# @file           app/ros_ws/src/detection/scripts/esp_connexion.py
+# @file           app/ros_ws/src/bob_le_nettoyeur/scripts/esp_connexion.py
 # @author         Jules Graeff && Antoine Passemard && Guillaume Bernard && Pauline Odet
 # @license        ???
 
@@ -13,7 +13,7 @@ import rospy
 from serial import *
 from std_msgs.msg import String
 from std_msgs.msg import Bool
-from detection.msg import Vide
+from bob_le_nettoyeur.msg import Vide
 
 ######################################################################################################################################################
 
@@ -28,7 +28,7 @@ class Esp32Connexion:
 
         # Creation of the relevent publishers which will be manage regarding the commands sent from ESP32
 
-        self._publisherVide = rospy.Publisher('/vide_detection', Vide, queue_size = 10)
+        self._publisherVide = rospy.Publisher('/vide_bob_le_nettoyeur', Vide, queue_size = 10)
         self._publisherMode = rospy.Publisher('/command_mode', String, queue_size = 10)
         self._publisherRoues = rospy.Publisher('/command_roues', String, queue_size = 10)
         self._publisherSpray = rospy.Publisher('/command_spray', Bool, queue_size = 10)

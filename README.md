@@ -12,7 +12,7 @@ A little sensor is allowing to detect the end of the table to not fall out of th
 
 ## User Manual
 
-First you need to be sure to have ROS kinetic installed and "dynamixel_motor" git repo must be installed.
+First you need to be sure to have ROS kinetic installed and "dynamixel_motor" git repo pulled.
 
 
 ```bash
@@ -20,7 +20,7 @@ roscore
 ```
 
 ```bash
-roslaunch detection control_all_launch.launch
+roslaunch bob_le_nettoyeur control_all_launch.launch
 ```
 
 The command used for debugging (reassigned the enslavement) the servo is : 

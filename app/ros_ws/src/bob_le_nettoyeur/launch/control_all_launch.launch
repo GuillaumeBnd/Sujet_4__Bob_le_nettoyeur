@@ -13,7 +13,7 @@
         </rosparam>
     </node> 
 
-    <rosparam file="$(find detection)/dual_motor.yaml" command="load"/>
+    <rosparam file="$(find bob_le_nettoyeur)/dual_motor.yaml" command="load"/>
 
     <node name="dual_motor_controller_spawner" pkg="dynamixel_controllers" type="controller_spawner.py"
           args="--manager=dxl_manager
@@ -21,7 +21,7 @@
                 dual_motor_controller"
           output="screen"/>
 
-    <rosparam file="$(find detection)/tilt.yaml" command="load"/>
+    <rosparam file="$(find bob_le_nettoyeur)/tilt.yaml" command="load"/>
     <node name="controller_spawner" pkg="dynamixel_controllers" type="controller_spawner.py"
           args="--manager=dxl_manager
                 --port pan_tilt_port
@@ -32,7 +32,7 @@
           output="screen"/>
           
   <!-- Start joints trajectory controller controller -->
-    <rosparam file="$(find detection)/joints_trajectory_controller.yaml" command="load"/>
+    <rosparam file="$(find bob_le_nettoyeur)/joints_trajectory_controller.yaml" command="load"/>
     <node name="controller_spawner_meta" pkg="dynamixel_controllers" type="controller_spawner.py"
           args="--manager=dxl_manager
                 --type=meta
@@ -43,7 +43,7 @@
                "
           output="screen"/>
 
-    <node name="master" pkg="detection" type="master.py" output="screen"/>
-    <node name="esp32_connexion" pkg="detection" type="esp32_connexion.py" output="screen"/>
+    <node name="master" pkg="bob_le_nettoyeur" type="master.py" output="screen"/>
+    <node name="esp32_connexion" pkg="bob_le_nettoyeur" type="esp32_connexion.py" output="screen"/>
 
 </launch>
