@@ -3,14 +3,14 @@
 #####################################################################################################################################################
 
 # @project        https://gitlab.com/5eti_proto_2021/sujet_4__bob_le_nettoyage.git
-# @file           app/ros_ws/src/detection/scripts/vide_detection.py
-# @author         Pauline Odet && Antoine Passemard && Jules Graeff && Guillaume Bernard
+# @file           app/ros_ws/src/detection/scripts/esp_connexion.py
+# @author         Jules Graeff && Antoine Passemard && Guillaume Bernard && Pauline Odet
 # @license        ???
 
 ######################################################################################################################################################
 
-from serial import *
 import rospy
+from serial import *
 from std_msgs.msg import String
 from std_msgs.msg import Bool
 from detection.msg import Vide
@@ -18,10 +18,15 @@ from detection.msg import Vide
 ######################################################################################################################################################
 
 class Esp32Connexion:
+    """
+    This class is handling all the Serial communication flow between ESP32 (Arduino Script) and the Raspberry PI ROS nodes (python)
+    """    
 
     def __init__ (self):
 
         rospy.init_node('esp32_connexion', anonymous = True)
+
+        # Creation of the relevent publishers which will be manage regarding the commands sent from ESP32
 
         self._publisherVide = rospy.Publisher('/vide_detection', Vide, queue_size = 10)
         self._publisherMode = rospy.Publisher('/command_mode', String, queue_size = 10)
@@ -29,10 +34,18 @@ class Esp32Connexion:
         self._publisherSpray = rospy.Publisher('/command_spray', Bool, queue_size = 10)
         self._publisherEponge = rospy.Publisher('/command_eponge', Bool, queue_size = 10)
 
+        # Serial port oppening (no context manager because we are also written in the serial port with the send_to_esp32 callback)
+        self.port_serie = Serial(
+            port = '/dev/ttyUSB0',
+            baudrate = 115200,
+            timeout = 1,
+            writeTimeout = 1
+        )
+
+        # Subscrib to 'send_to_esp32' topic
         rospy.Subscriber('/send_to_esp32', String, self._sendToEsp32)
 
-        self.port_serie = Serial('/dev/ttyUSB0', 115200 , timeout=1, writeTimeout = 1)
-
+        # Infinite Loop which handle the listenning of the command sent from ESP32
         if self.port_serie.isOpen():
 
             while not rospy.is_shutdown():
@@ -46,11 +59,22 @@ class Esp32Connexion:
             self.port_serie.close()
 
     def _sendToEsp32 (self, message):
+        """
+        [Handle the writting on the ESP32 of the msg when the subscription is triggered]
+
+        Args:
+            message ([String])
+        """        
 
         self.port_serie.write(message.data)
 
-
     def _listen_esp32 (self, port_serie):
+        """
+        [Handle the listening of the ESP32 msg -> Publish value regarding these commands]
+
+        Args:
+            port_serie ([Serial])
+        """        
 
         try:
 
@@ -113,6 +137,6 @@ class Esp32Connexion:
 if __name__ == '__main__':
 
     get_send_message_esp32 = Esp32Connexion()
-    rospy.spin()
+    # rospy.spin()
 
 ######################################################################################################################################################
