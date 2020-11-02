@@ -28,7 +28,7 @@ class Esp32Connexion:
 
         # Creation of the relevent publishers which will be manage regarding the commands sent from ESP32
 
-        self._publisherVide = rospy.Publisher('/vide_bob_le_nettoyeur', Vide, queue_size = 10)
+        self._publisherVide = rospy.Publisher('/vide_detection', Vide, queue_size = 10)
         self._publisherMode = rospy.Publisher('/command_mode', String, queue_size = 10)
         self._publisherRoues = rospy.Publisher('/command_roues', String, queue_size = 10)
         self._publisherSpray = rospy.Publisher('/command_spray', Bool, queue_size = 10)
