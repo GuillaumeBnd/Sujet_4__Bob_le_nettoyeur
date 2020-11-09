@@ -29,7 +29,7 @@ and
 
 Here the system architecture : 
 
-![Schéma_bob_le_nettoyeur.png]
+![System architecture](Schéma_bob_le_nettoyeur.png?raw=true "Title")
 
 ## Starting :
 First you need to be sure to have ROS kinetic installed and "dynamixel_motor" git repo pulled.
