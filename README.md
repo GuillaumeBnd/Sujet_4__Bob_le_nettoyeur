@@ -3,9 +3,9 @@
 This project allows to control a cleaning robot from an Android application, or to let it operates autonomously. This robot is able to move in a space while he is cleaning a table. It has been developed by Guillaume BERNARD, Jules GRAEFF, Pauline ODET and Antoine PASSEMARD, robotics student in the CPE school, in Lyon.
 
 There are two functionning modes:
+- "control" mode = manual mode
+- "auto" mode = automatic mode
 
-"control" mode = manual mode
-"auto" mode = automatic mode
 A little ToF sensor in front of Bob able it to detect the end of the table to not fall out of the table. Some parts have been printed with a 3D printer, like the container for the hydroalcoolic liquid, and for the sensor support.
 
 ## The material and technologies used :
@@ -29,7 +29,7 @@ and
 
 Here the system architecture : 
 
-![system_architecture.png]
+![Schéma_bob_le_nettoyeur.png]
 
 ## Starting :
 First you need to be sure to have ROS kinetic installed and "dynamixel_motor" git repo pulled.
@@ -46,7 +46,7 @@ rosrun dynamixel_driver set_servo_config.py 3 --cw-angle-limit=0 --ccw-angle-lim
 
 The first parameter "3" is the servomotor id, then in the second and third parameters CW means clockwise and CCW means counterclockwise, it makes sense if we want the motor to fully rotate, then both CW and CCW limits should be 0.
 
-ligne 59 du code master -> changer le port par défaut tty ACM0
+59 line du code master -> changer le port par défaut tty ACM0
 
 ## Setting up :
 The robot must be placed on a table, so that its ToF sensor is activated (it sees that the table is near). The Raspberry must be powered by the 12V battery, and connected to the WiFi (automatically done when started). The pump must be triggered by putting hydroalcoolic liquid in the pipes, otherwise it won't be able to spray some liquid.
